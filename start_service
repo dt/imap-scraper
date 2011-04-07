@@ -1,0 +1,37 @@
+#!/bin/bash
+
+if [ -f backend.pid ] ; then
+  echo "Backend already running?"
+  ps aux | grep backend
+  exit
+fi
+
+launch_daemon()
+{
+     /bin/sh <<EOF
+     CP="conf/:bin/"
+     for jar in lib/*.jar ; do
+       CP="\$CP:\$jar"
+     done
+     flags=""
+     #uncomment this line in production
+     #flags="production"
+     flags="\$flags daemonize backend.pid"
+     scala -classpath \$CP imapscraper.Service \$flags <&- &
+     pid=\$!
+     echo \${pid} > backend.pid
+EOF
+}
+
+echo `launch_daemon`
+daemon_pid=`cat backend.pid`
+
+echo $daemon_pid
+
+if ps -p "${daemon_pid}" >/dev/null 2>&1
+then
+  # daemon is running.
+  echo "Daemon is running in background (pid: ${daemon_pid})."
+else
+  echo "Daemon did not start. See logs"
+fi

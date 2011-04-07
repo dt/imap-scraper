@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd" >
+<log4j:configuration>
+	<appender name="stdout" class="org.apache.log4j.ConsoleAppender">
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{ABSOLUTE} %5p %c{1}:%L - %m%n"/>
+		</layout>
+		<filter class="imapscraper.log.CustomConsoleRange">
+			<param name="LevelMin" value="info" />
+			<param name="LevelMax" value="fatal" />
+		</filter>
+	</appender>
+	<appender name="problems_file" class="org.apache.log4j.RollingFileAppender">
+		<param name="maxFileSize" value="100KB" />
+		<param name="maxBackupIndex" value="5" />
+		<param name="File" value="logs/problems.log" ></param>
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern"
+				value="%d{ABSOLUTE} %5p %c{1}:%L - %m%n" />
+		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="LevelMin" value="warn" />
+			<param name="LevelMax" value="fatal" />
+		</filter>
+	</appender>
+	<appender name="full_file" class="org.apache.log4j.RollingFileAppender">
+		<param name="maxFileSize" value="100KB" />
+		<param name="maxBackupIndex" value="5" />
+		<param name="File" value="logs/full.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern"
+				value="%d{ABSOLUTE} %5p %c{1}:%L - %m%n" />
+		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="LevelMin" value="info" />
+			<param name="LevelMax" value="fatal" />
+		</filter>
+	</appender>
+	<appender name="debug_file" class="org.apache.log4j.RollingFileAppender">
+		<param name="maxFileSize" value="100KB" />
+		<param name="maxBackupIndex" value="5" />
+		<param name="File" value="logs/debug.log" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern"
+				value="%d{ABSOLUTE} %5p %c{1}:%L - %m%n" />
+		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="LevelMin" value="trace" />
+			<param name="LevelMax" value="fatal" />
+		</filter>
+	</appender>
+	<appender name="error_email" class="imapscraper.log.CustomSMTPAppender">
+		<param name="SMTPHost" value="smtp.googlemail.com" />
+		<param name="SMTPPort" value="587" />
+		<param name="SMTPProtocol" value="smtp" />
+		<param name="StartTls" value="true" />
+		<param name="SMTPUsername" value="notifications@domain.tld" />
+		<param name="SMTPPassword" value="password" />
+		<param name="From" value="notifications@domain.tld" />
+		<param name="To" value="admin@domain.tld" />
+		<param name="Subject" value="[IMAPScraper] Backend Error" />
+		<param name="BufferSize" value="1" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern"
+				value="%d{ABSOLUTE} %5p %c{1}:%L - %m%n" />
+		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="LevelMin" value="error" />
+			<param name="LevelMax" value="error" />
+		</filter>
+	</appender>
+	<appender name="fatal_email" class="imapscraper.log.CustomSMTPAppender">
+		<param name="SMTPHost" value="smtp.googlemail.com" />
+		<param name="SMTPPort" value="587" />
+		<param name="SMTPProtocol" value="smtp" />
+		<param name="StartTls" value="true" />
+		<param name="SMTPUsername" value="notifications@domain.tld" />
+		<param name="SMTPPassword" value="password" />
+		<param name="From" value="notifications@cdomain.tld" />
+		<param name="To" value="admin@domain.tld" />
+		<param name="Subject" value="[IMAPScraper] BACKEND CRASHED" />
+		<param name="BufferSize" value="1" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern"
+				value="%d{ABSOLUTE} %5p %c{1}:%L - %m%n" />
+		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="LevelMin" value="fatal" />
+			<param name="LevelMax" value="fatal" />
+		</filter>
+	</appender>
+	<root>
+		<priority value="trace"></priority>
+		<appender-ref ref="stdout"/>
+		<appender-ref ref="problems_file" />
+		<appender-ref ref="full_file" />
+		<appender-ref ref="debug_file" />
+		<appender-ref ref="error_email" />
+		<appender-ref ref="fatal_email" />
+	</root>
+</log4j:configuration>
